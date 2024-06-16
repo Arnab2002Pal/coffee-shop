@@ -13,8 +13,8 @@ const coffeeShopSchema = new mongoose.Schema({
         zipcode: String
     },
     location: {
-        type: { type: String, default: 'Point' },
-        coordinates: [Number]  // [longitude, latitude]
+        lat: Number,
+        long: Number
     },
     ratings: {
         type: Number,
@@ -24,10 +24,7 @@ const coffeeShopSchema = new mongoose.Schema({
         public_id: String,
         url: String
     },
-    products: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Product'
-    }]
+    products: [String]
 });
 
 // Index for geospatial queries based on location

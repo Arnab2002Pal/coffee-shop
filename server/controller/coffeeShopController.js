@@ -2,10 +2,18 @@ const { z } = require("zod");
 const CoffeeShop = require("../models/coffeeShop");
 const cloudinary = require("cloudinary");
 
-// Get all coffee shops
 const getShops = async (req, res) => {
   try {
-    const shopDetails = await CoffeeShop.find();
+    const { search } = req.query; 
+    let shopDetails;
+
+    if (search && search.trim().length > 0) {
+      const searchRegex = new RegExp(search, 'i'); 
+      shopDetails = await CoffeeShop.find({ name: searchRegex });
+    } else {
+      shopDetails = await CoffeeShop.find();
+    }
+
     return res.status(200).json({ data: shopDetails });
   } catch (error) {
     return res
@@ -13,6 +21,7 @@ const getShops = async (req, res) => {
       .json({ message: "Error fetching shops", error: error.message });
   }
 };
+
 
 // Get a single coffee shop by ID
 const getShop = async (req, res) => {
