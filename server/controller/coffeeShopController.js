@@ -2,7 +2,7 @@ const { z } = require("zod");
 const CoffeeShop = require("../models/coffeeShop");
 const cloudinary = require("cloudinary");
 
-const getShops = async (req, res) => {
+const getAllShops = async (req, res) => {
   try {
     const { search } = req.query; 
     let shopDetails;
@@ -23,7 +23,6 @@ const getShops = async (req, res) => {
 };
 
 
-// Get a single coffee shop by ID
 const getShop = async (req, res) => {
   try {
     const shop = await CoffeeShop.findById(req.params.id);
@@ -38,18 +37,15 @@ const getShop = async (req, res) => {
   }
 };
 
-// Register a new coffee shop
 const registerShop = async (req, res) => {
   const { name, description, address, location, ratings, image, products } =
     req.body;
 
   try {
-    // Upload image to Cloudinary
     const uploadResult = await cloudinary.uploader.upload(image, {
       folder: "coffee-shop",
     });
 
-    // Create new coffee shop instance
     const newCoffeeShop = new CoffeeShop({
       name,
       description,
@@ -63,7 +59,6 @@ const registerShop = async (req, res) => {
       products,
     });
 
-    // Save new coffee shop to database
     await newCoffeeShop.save();
     res.status(201).json(newCoffeeShop);
   } catch (err) {
@@ -71,36 +66,26 @@ const registerShop = async (req, res) => {
   }
 };
 
-// Edit an existing coffee shop
 const editShop = async (req, res) => {
-  const { name, description, address, location, ratings, image, products } =
+  const { name, description, address, location, ratings, image } =
     req.body;
-
   try {
     let updateData = {
-      name,
-      description,
-      address,
-      location,
-      ratings,
-      products,
+      name : name,
+      description: description,
+      address :{
+        street: address.street,
+        city: address.city,
+        state: address.state,
+        zipcode: address.zipcode,
+      },
+      location: {
+        lat: location.lat,
+        long: location.long,
+      },
+      ratings
     };
 
-    // Check if there is a new image to upload
-    if (image) {
-      // Upload image to Cloudinary
-      const uploadResult = await cloudinary.uploader.upload(image, {
-        folder: "coffee-shop",
-      });
-
-      // Update image details in updateData
-      updateData.image = {
-        public_id: uploadResult.public_id,
-        url: uploadResult.secure_url,
-      };
-    }
-
-    // Find coffee shop by ID and update
     const updatedShop = await CoffeeShop.findByIdAndUpdate(
       req.params.id,
       updateData,
@@ -113,13 +98,38 @@ const editShop = async (req, res) => {
 
     res.status(200).json(updatedShop);
   } catch (error) {
+    console.error("Error updating shop:", error);
     res.status(500).json({ error: error.message });
   }
 };
 
+const deleteShop = async (req, res) => {
+  try {
+    const shop = await CoffeeShop.findById(req.params.id);
+    
+    if (!shop) {
+      return res.status(404).json({ message: "Coffee shop not found" });
+    }
+
+    if (!shop.image || !shop.image.public_id) {
+      return res.status(404).json({ message: "Shop image not found" });
+    }
+
+    await cloudinary.uploader.destroy(shop.image.public_id);
+
+    await CoffeeShop.findByIdAndDelete(req.params.id);
+ return res.status(200).json({ message: "Coffee shop deleted successfully" });
+   
+  } catch (error) {
+    return res.status(500).json({ message: "Error deleting coffee shop", error: error.message });
+  }
+}
+
 module.exports = {
-  getShops,
+  editShop,
+  getAllShops,
   getShop,
   registerShop,
   editShop,
+  deleteShop
 };

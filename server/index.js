@@ -22,9 +22,9 @@ app.use(express.urlencoded({
 db()
 
 cloudinary.v2.config({ 
-    cloud_name: "dl8mvnwxh", 
-    api_key: "321928371763247", 
-    api_secret:"o_Gyb1ju40BgPgTlJGELmYL-iuc" 
+    cloud_name: process.env.CLOUDINARY_NAME, 
+    api_key: process.env.CLOUDINARY_API_KEY, 
+    api_secret: process.env.CLOUDINARY_API_SECRET 
 });
 
 app.use('/api/v1/',router)

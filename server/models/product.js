@@ -16,7 +16,8 @@ const productSchema = new mongoose.Schema({
     },
     coffeeShop: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'CoffeeShop'
+        ref: 'CoffeeShop',
+        default: []
     }
 });
 

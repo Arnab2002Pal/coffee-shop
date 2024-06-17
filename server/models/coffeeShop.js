@@ -24,10 +24,12 @@ const coffeeShopSchema = new mongoose.Schema({
         public_id: String,
         url: String
     },
-    products: [String]
-});
+    products: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Product',
+        default: [],
+      }],});
 
-// Index for geospatial queries based on location
 coffeeShopSchema.index({ location: '2dsphere' });
 
 const CoffeeShop = mongoose.model('CoffeeShop', coffeeShopSchema);
