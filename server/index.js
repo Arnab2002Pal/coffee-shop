@@ -1,8 +1,9 @@
 const express = require('express')
 const cors = require('cors')
 const dotenv = require('dotenv')
-const router = require('./routes/router')
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const cloudinary = require('cloudinary')
+const router = require('./routes/router')
 dotenv.config()
 
 const db = require('./utils/db')
@@ -21,6 +22,14 @@ app.use(express.urlencoded({
     limit:"50mb"
 }))
 db()
+
+const apiProxy = createProxyMiddleware({
+  target: `${process.env.HOST}:${port}`,
+  changeOrigin: true,
+  secure: false,
+});
+
+app.use(apiProxy)
 
 cloudinary.v2.config({ 
     cloud_name: process.env.CLOUDINARY_NAME, 
