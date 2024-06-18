@@ -80,4 +80,5 @@ The frontend development server will start running on [http://localhost:5173](ht
 - Express.js (for backend)
 - React (for frontend)
 - MongoDB (for database)
-- Leaflet.js (for maps integration)
+- Leaflet.js (for maps integration - 3rd party api)
+- Cloudinary (for image storage - 3rd party api)
