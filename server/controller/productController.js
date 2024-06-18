@@ -1,13 +1,17 @@
 const Product = require("../models/product");
 const CoffeeShop = require("../models/coffeeShop");
 
+const handleErrorResponse = (res, message, error, statusCode = 500) => {
+  console.error(message, error);
+  return res.status(statusCode).json({ message, error: error.message });
+};
+
 const getProductsByCoffeeShop = async (req, res) => {
   try {
     const products = await Product.find({ coffeeShop: req.params.coffeeShopId });
     return res.status(200).json(products);
   } catch (error) {
-    console.error("Error fetching products:", error);
-    return res.status(500).json({ message: error.message });
+    return handleErrorResponse(res, "Error fetching products", error);
   }
 };
 
@@ -33,19 +37,16 @@ const createProduct = async (req, res) => {
       coffeeShop.products = [];
     }
 
-    coffeeShop.products.push(product._id); 
-
+    coffeeShop.products.push(product._id);
     await coffeeShop.save();
 
-    res.status(201).json({ product });
+    return res.status(201).json({ product });
   } catch (error) {
-    console.error("Error creating product:", error);
-    res.status(500).json({ message: error.message });
+    return handleErrorResponse(res, "Error creating product", error);
   }
 };
 
-
 module.exports = {
   getProductsByCoffeeShop,
-  createProduct
+  createProduct,
 };

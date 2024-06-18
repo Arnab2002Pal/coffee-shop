@@ -3,12 +3,12 @@ import { FaGithub } from "react-icons/fa";
 const Footer = () => {
   return (
     <div>
-      <footer className="bg-white rounded-lg shadow m-4 dark:bg-gray-800">
+      <footer className="bg-white rounded-lg shadow m-4">
         <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
-          <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400">
+          <span className="text-sm text-gray-500 sm:text-center">
             © 2024. All Rights Reserved.
           </span>
-          <span className="text-sm text-gray-500 sm:text-center dark:text-gray-400 flex items-center mt-2 md:mt-0">
+          <span className="text-sm text-gray-500 sm:text-center flex items-center mt-2 md:mt-0">
             Developed by{" "}
             <a
               href="https://github.com/Arnab2002Pal"

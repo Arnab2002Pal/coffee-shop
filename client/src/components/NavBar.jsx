@@ -10,9 +10,6 @@ const NavBar = () => {
     setIsOpen(!isOpen);
   };
 
-  const linkStyle =
-    location.pathname === "/shops" ? "text-white" : "text-white";
-
   return (
     <nav className="fixed w-full z-30 bg-teal-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
